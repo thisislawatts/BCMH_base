@@ -16,7 +16,7 @@
 			<?php do_action( 'BCMH_credits' ); ?>
 			<a href="http://wordpress.org/" title="<?php esc_attr_e( 'A Semantic Personal Publishing Platform', 'BCMH' ); ?>" rel="generator"><?php printf( __( 'Proudly powered by %s', 'BCMH' ), 'WordPress' ); ?></a>
 			<span class="sep"> | </span>
-			<?php printf( __( 'Theme: %1$s by %2$s.', 'BCMH' ), 'BCMH', '<a href="http://automattic.com/" rel="designer">Automattic</a>' ); ?>
+			<?php printf( __( 'Theme: %1$s by %2$s.', 'BCMH' ), 'BCMH', '<a href="http://bcmh.co.uk/" rel="designer">BCMH</a>' ); ?>
 		</div><!-- .site-info -->
 	</footer><!-- #colophon .site-footer -->
 </div><!-- #page .hfeed .site -->
