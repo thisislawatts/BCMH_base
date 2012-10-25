@@ -173,3 +173,22 @@ function BCMH_category_transient_flusher() {
 }
 add_action( 'edit_category', 'BCMH_category_transient_flusher' );
 add_action( 'save_post', 'BCMH_category_transient_flusher' );
+
+/**
+ * Get attachment's caption
+ * 
+ * @since BCMH_base 1.0
+ */
+function BCMH_get_attachment_caption( $attachment_id ) {
+
+	$attachments = get_posts( array(
+			'post_type' => 'attachment',
+			'include' => array( $attachment_id )
+		) );
+
+	if ( !is_array( $attachments ) ) return;
+
+	$attachment = array_pop( $attachments );
+
+	return $attachment->post_content | $attachment->post_excerpt;
+}

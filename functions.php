@@ -117,3 +117,15 @@ add_action( 'wp_enqueue_scripts', 'BCMH_scripts' );
  * Implement the Custom Header feature
  */
 //require( get_template_directory() . '/inc/custom-header.php' );
+
+function pre( $msg ) {
+	echo "<pre>";
+		print_r( $msg );
+	echo "</pre>";
+}
+
+
+function dre( $msg ) {
+	pre( $msg );
+	die();
+}
