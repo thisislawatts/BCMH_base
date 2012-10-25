@@ -26,6 +26,8 @@ if ( ! function_exists( 'BCMH_setup' ) ):
  */
 function BCMH_setup() {
 
+	show_admin_bar(false);
+
 	/**
 	 * Custom template tags for this theme.
 	 */
@@ -96,6 +98,8 @@ add_action( 'widgets_init', 'BCMH_widgets_init' );
  */
 function BCMH_scripts() {
 	wp_enqueue_style( 'style', get_stylesheet_uri() );
+
+	wp_enqueue_script( 'modernizr', get_template_directory_uri() . '/js/libs/modernizr.js', false, '2.6.2' );
 
 	wp_enqueue_script( 'small-menu', get_template_directory_uri() . '/js/small-menu.js', array( 'jquery' ), '20120206', true );
 
