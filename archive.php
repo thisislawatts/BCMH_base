@@ -67,9 +67,6 @@ get_header(); ?>
 					?>
 				</header><!-- .page-header -->
 
-				<?php BCMH_content_nav( 'nav-above' ); ?>
-
-				<?php /* Start the Loop */ ?>
 				<?php while ( have_posts() ) : the_post(); ?>
 
 					<?php
