@@ -30,9 +30,7 @@ function BCMH_content_nav( $nav_id ) {
 	if ( $wp_query->max_num_pages < 2 && ( is_home() || is_archive() || is_search() ) )
 		return;
 
-	$nav_class = 'site-navigation paging-navigation';
-	if ( is_single() )
-		$nav_class = 'site-navigation post-navigation';
+	$nav_class = 'site-navigation post-navigation';
 
 	?>
 	<nav role="navigation" id="<?php echo $nav_id; ?>" class="<?php echo $nav_class; ?>">
@@ -46,11 +44,11 @@ function BCMH_content_nav( $nav_id ) {
 	<?php elseif ( $wp_query->max_num_pages > 1 && ( is_home() || is_archive() || is_search() ) ) : // navigation links for home, archive, and search pages ?>
 
 		<?php if ( get_next_posts_link() ) : ?>
-		<div class="nav-previous"><?php next_posts_link( __( '<span class="meta-nav">&larr;</span> Older posts', 'BCMH' ) ); ?></div>
+		<div class="nav-previous"><?php next_posts_link( __( '<span class="meta-nav">&larr;</span> Older', 'BCMH' ) ); ?></div>
 		<?php endif; ?>
 
 		<?php if ( get_previous_posts_link() ) : ?>
-		<div class="nav-next"><?php previous_posts_link( __( 'Newer posts <span class="meta-nav">&rarr;</span>', 'BCMH' ) ); ?></div>
+		<div class="nav-next"><?php previous_posts_link( __( 'Newer <span class="meta-nav">&rarr;</span>', 'BCMH' ) ); ?></div>
 		<?php endif; ?>
 
 	<?php endif; ?>
