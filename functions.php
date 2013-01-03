@@ -36,12 +36,12 @@ function BCMH_setup() {
 	/**
 	 * Custom functions that act independently of the theme templates
 	 */
-	//require( get_template_directory() . '/inc/tweaks.php' );
+	require( get_template_directory() . '/inc/tweaks.php' );
 
 	/**
 	 * Custom Theme Options
 	 */
-	//require( get_template_directory() . '/inc/theme-options/theme-options.php' );
+	require( get_template_directory() . '/inc/theme-options/theme-options.php' );
 
 	/**
 	 * Make theme available for translation

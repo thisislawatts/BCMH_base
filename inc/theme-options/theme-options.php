@@ -34,17 +34,26 @@ function BCMH_theme_options_init() {
 
 	// Register our individual settings fields
 	add_settings_field(
-		'sample_checkbox', // Unique identifier for the field for this section
-		__( 'Sample Checkbox', 'BCMH' ), // Setting field label
-		'BCMH_settings_field_sample_checkbox', // Function that renders the settings field
+		'hide_site', // Unique identifier for the field for this section
+		__( 'Hide Site', 'BCMH' ), // Setting field label
+		'BCMH_settings_field_hide_site', // Function that renders the settings field
 		'theme_options', // Menu slug, used to uniquely identify the page; see BCMH_theme_options_add_page()
 		'general' // Settings section. Same as the first argument in the add_settings_section() above
 	);
 
-	add_settings_field( 'sample_text_input', __( 'Sample Text Input', 'BCMH' ), 'BCMH_settings_field_sample_text_input', 'theme_options', 'general' );
-	add_settings_field( 'sample_select_options', __( 'Sample Select Options', 'BCMH' ), 'BCMH_settings_field_sample_select_options', 'theme_options', 'general' );
-	add_settings_field( 'sample_radio_buttons', __( 'Sample Radio Buttons', 'BCMH' ), 'BCMH_settings_field_sample_radio_buttons', 'theme_options', 'general' );
-	add_settings_field( 'sample_textarea', __( 'Sample Textarea', 'BCMH' ), 'BCMH_settings_field_sample_textarea', 'theme_options', 'general' );
+	// Samples
+	// add_settings_field(
+	// 	'sample_checkbox', // Unique identifier for the field for this section
+	// 	__( 'Sample Checkbox', 'BCMH' ), // Setting field label
+	// 	'BCMH_settings_field_sample_checkbox', // Function that renders the settings field
+	// 	'theme_options', // Menu slug, used to uniquely identify the page; see BCMH_theme_options_add_page()
+	// 	'general' // Settings section. Same as the first argument in the add_settings_section() above
+	// );
+
+	// add_settings_field( 'sample_text_input', __( 'Sample Text Input', 'BCMH' ), 'BCMH_settings_field_sample_text_input', 'theme_options', 'general' );
+	// add_settings_field( 'sample_select_options', __( 'Sample Select Options', 'BCMH' ), 'BCMH_settings_field_sample_select_options', 'theme_options', 'general' );
+	// add_settings_field( 'sample_radio_buttons', __( 'Sample Radio Buttons', 'BCMH' ), 'BCMH_settings_field_sample_radio_buttons', 'theme_options', 'general' );
+	// add_settings_field( 'sample_textarea', __( 'Sample Textarea', 'BCMH' ), 'BCMH_settings_field_sample_textarea', 'theme_options', 'general' );
 }
 add_action( 'admin_init', 'BCMH_theme_options_init' );
 
@@ -148,6 +157,7 @@ function BCMH_sample_radio_buttons() {
 function BCMH_get_theme_options() {
 	$saved = (array) get_option( 'BCMH_theme_options' );
 	$defaults = array(
+		'hide_site'				=> 'on',
 		'sample_checkbox'       => 'off',
 		'sample_text_input'     => '',
 		'sample_select_options' => '',
@@ -162,6 +172,20 @@ function BCMH_get_theme_options() {
 
 	return $options;
 }
+
+/**
+ * Renders the 'hide-site' checkbox setting field.
+ */
+function BCMH_settings_field_hide_site() {
+	$options = BCMH_get_theme_options();
+	?>
+	<label for="hide-site">
+		<input type="checkbox" name="BCMH_theme_options[hide_site]" id="hide-site" <?php checked( 'on', $options['hide_site'] ); ?> />
+		<?php _e( 'Prevent logged out users from accessing the site.', 'BCMH' ); ?>
+	</label>
+	<?php
+}
+
 
 /**
  * Renders the sample checkbox setting field.
@@ -303,4 +327,25 @@ function BCMH_theme_options_validate( $input ) {
 		$output['sample_textarea'] = wp_filter_post_kses( $input['sample_textarea'] );
 
 	return apply_filters( 'BCMH_theme_options_validate', $output, $input );
+}
+
+add_action( 'init', 'bcmh_hide_site' );
+
+/**
+ * Redirect site to static site during development/downtime
+ * 
+ * @return false
+ * 
+ * @since BCMH_base 1.1
+ */
+function bcmh_hide_site() {
+	$options = BCMH_get_theme_options();
+	
+	$login = in_array($GLOBALS['pagenow'], array('wp-login.php', 'wp-register.php'));
+
+	if ( "on" == $options['hide_site'] && !is_user_logged_in() && !$login ) {
+		require get_template_directory() . "/inc/static/site-hidden.php";
+		
+		die();
+	}
 }

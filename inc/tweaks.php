@@ -50,3 +50,31 @@ function BCMH_enhanced_image_navigation( $url, $id ) {
 	return $url;
 }
 add_filter( 'attachment_link', 'BCMH_enhanced_image_navigation', 10, 2 );
+
+
+
+/**
+ * Login Page
+ * 
+ * Customisations to the login page
+ * 
+ * @since BCMH_base 1.2
+ */
+
+function bcmh_login_url() {
+	return "http://bcmh.co.uk/";
+}
+add_filter( 'login_headerurl', 'bcmh_login_url' );
+
+
+function bcmh_login_styles() {
+	wp_enqueue_style( 'login_css', get_template_directory_uri() . "/inc/admin/css/login.css" );
+}
+add_filter( 'login_head', 'bcmh_login_styles' );
+
+
+/* 		Admin Page */
+function bcmh_admin_footer() {
+	echo '&copy; ' . date("Y") . ' <a href="http://bcmh.co.uk">BCMH</a>';
+}
+add_filter( 'admin_footer_text', 'bcmh_admin_footer' );

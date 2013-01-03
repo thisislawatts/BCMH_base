@@ -1,0 +1,30 @@
+#login h1 a {
+	background-image: url("../images/BCMH_monogram_black_web.svg");
+	background-size: 110px 31px;
+}
+
+.hold h1 {
+	background: url("../images/BCMH_monogram_black_web.svg") center center no-repeat;
+	overflow: hidden;
+	padding-top: 2em;
+	height: 0;
+	margin-top: 5em;
+}
+
+.login form {
+	background: transparent;
+	border: none;
+	-webkit-box-shadow: none;
+	   -moz-box-shadow: none;
+		-ms-box-shadow: none;
+			box-shadow: none;
+}
+
+.login form input[type="text|password"] {
+	background: #fff;
+}
+
+#login #nav a,
+#login #backtoblog a {
+	color: #444 !important;
+}
