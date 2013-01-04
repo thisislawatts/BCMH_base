@@ -7,6 +7,7 @@ Features
 --------
 
 - Hidden Site — Used during development redirects to static content /inc/static/site-hidden.php
+- Branded Administrative area & Login Screen
 
 To Do
 -----
