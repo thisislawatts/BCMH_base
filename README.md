@@ -1,7 +1,7 @@
 BCMH Base
 =========
 
-Hello World. This theme has been built on the start theme '_s', and will be primarily be used as a repo for floating recurring parts of our client theme developement into a central repo for easy reuse.
+Hello World. This Wordpress theme has been built on the starter theme '_s', and will be primarily be used as a repo for floating recurring parts of our client developement into a central repo for easy reuse.
 
 I would highly recommend heading http://underscores.me/ to generate your own WordPress base theme :D
 
@@ -14,4 +14,4 @@ Features
 To Do
 -----
 
-- Add vCard for structured http://schema.org http://underscores.me/ markup
+- Add vCard for structured http://schema.org semantic markup
