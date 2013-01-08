@@ -27,9 +27,16 @@ function BCMH_theme_options_init() {
 	// Register our settings field group
 	add_settings_section(
 		'general', // Unique identifier for the settings section
-		'', // Section title (we don't want one)
+		'General', // Section title (we don't want one)
 		'__return_false', // Section callback (we don't want anything)
 		'theme_options' // Menu slug, used to uniquely identify the page; see BCMH_theme_options_add_page()
+	);
+
+	add_settings_section(
+		'vcard',
+		'vCard',
+		'__return_false',
+		'theme_options'
 	);
 
 	// Register our individual settings fields
@@ -40,6 +47,17 @@ function BCMH_theme_options_init() {
 		'theme_options', // Menu slug, used to uniquely identify the page; see BCMH_theme_options_add_page()
 		'general' // Settings section. Same as the first argument in the add_settings_section() above
 	);
+
+	// vCard Settings
+	add_settings_field( 'street_address', __( 'Street Address', 'BCMH' ), 'BCMH_settings_text_input', 'theme_options', 'vcard', array( 'label_for' => 'street_address' ) );
+	add_settings_field( 'address_locality', __( 'City/Town', 'BCMH' ), 'BCMH_settings_text_input', 'theme_options', 'vcard', array( 'label_for' => 'address_locality' ) );
+	add_settings_field( 'address_region', __( 'County/Region', 'BCMH' ), 'BCMH_settings_text_input', 'theme_options', 'vcard', array( 'label_for' => 'address_region' ) );
+	add_settings_field( 'address_country', __( 'Country', 'BCMH' ), 'BCMH_settings_text_input', 'theme_options', 'vcard', array( 'label_for' => 'address_country' ) );
+	add_settings_field( 'postal_code', __( 'Postal Code', 'BCMH' ), 'BCMH_settings_text_input', 'theme_options', 'vcard', array( 'label_for' => 'postal_code' ) );
+
+	add_settings_field( 'telephone', __( 'Telephone', 'BCMH' ), 'BCMH_settings_text_input', 'theme_options', 'vcard', array( 'label_for' => 'telephone' ) );
+	add_settings_field( 'email', __( 'Email', 'BCMH' ), 'BCMH_settings_text_input', 'theme_options', 'vcard', array( 'label_for' => 'email' ) );
+	add_settings_field( 'url', __( 'URL', 'BCMH' ), 'BCMH_settings_text_input', 'theme_options', 'vcard', array( 'label_for' => 'url' ) );
 
 	// Samples
 	// add_settings_field(
@@ -80,14 +98,26 @@ add_filter( 'option_page_capability_BCMH_options', 'BCMH_option_page_capability'
  */
 function BCMH_theme_options_add_page() {
 	$theme_page = add_theme_page(
-		__( 'Theme Options', 'BCMH' ),   // Name of page
-		__( 'Theme Options', 'BCMH' ),   // Label in menu
+		__( 'Settings', 'BCMH' ),   // Name of page
+		__( 'Settings', 'BCMH' ),   // Label in menu
 		'edit_theme_options',          // Capability required
 		'theme_options',               // Menu slug, used to uniquely identify the page
 		'BCMH_theme_options_render_page' // Function that renders the options page
 	);
 }
 add_action( 'admin_menu', 'BCMH_theme_options_add_page' );
+
+/**
+ * Prints out our textfield
+ * 
+ * @since BCMH_base 1.2
+ */
+function BCMH_settings_text_input( $params = array() ) {
+	$options = BCMH_get_theme_options();
+	?>
+	<input type="text" name="BCMH_theme_options[<?php echo $params['label_for'] ?>]" id="<?php echo $params['label_for'] ?>" value="<?php echo $options[$params['label_for']] ?>">
+	<?php 
+}
 
 /**
  * Returns an array of sample select options registered for BCMH_base.
@@ -170,7 +200,7 @@ function BCMH_get_theme_options() {
 
 	$options = wp_parse_args( $saved, $defaults );
 
-	$options = array_intersect_key( $options, $defaults );
+	//$options = array_intersect_key( $options, $defaults );
 
 	return $options;
 }
@@ -188,7 +218,6 @@ function BCMH_settings_field_hidden_checkbox() {
 	</label>
 	<?php
 }
-
 
 /**
  * Renders the sample checkbox setting field.
@@ -273,6 +302,22 @@ function BCMH_settings_field_sample_textarea() {
 	<?php
 }
 
+function bcmh_admin_tabs() {
+	return false;
+	$tabs = array(
+		'general' => 'General',
+		'vcard'	  => 'vCard'
+	);
+
+	echo '<h2 class="nav-tab-wrapper">';
+	foreach ( $tabs as $tab => $name ) {
+		$class = $tab == $current ? ' nav-tab-active' : '';
+		echo "<a class='nav-tab$class' href='?page=theme_options&tab=$tab'>$name</a>";
+	}
+	echo '</h2>';
+
+}
+
 /**
  * Renders the Theme Options administration screen.
  *
@@ -283,9 +328,11 @@ function BCMH_theme_options_render_page() {
 	<div class="wrap">
 		<?php screen_icon(); ?>
 		<?php $theme_name = function_exists( 'wp_get_theme' ) ? wp_get_theme() : get_current_theme(); ?>
-		<h2><?php printf( __( '%s Theme Options', 'BCMH' ), $theme_name ); ?></h2>
+		<h2><?php printf( __( '%s Options', 'BCMH' ), $theme_name ); ?></h2>
+		
 		<?php settings_errors(); ?>
-
+		<?php bcmh_admin_tabs(); ?>
+		
 		<form method="post" action="options.php">
 			<?php
 				settings_fields( 'BCMH_options' );
@@ -311,12 +358,27 @@ function BCMH_theme_options_render_page() {
 function BCMH_theme_options_validate( $input ) {
 	$output = array();
 
-	// Checkboxes will only be present if checked.
-	if ( isset( $input['sample_checkbox'] ) )
-		$output['sample_checkbox'] = 'on';
+	$text_field_inputs = array(
+		'street_address',
+		'address_locality',
+		'address_region',
+		'address_country',
+		'postal_code',
+		'telephone',
+		'email',
+		'url'
+	);
 
-	if ( isset( $input['hidden_checkbox'] ) )
-		$output['hidden_checkbox'] = 'on';
+	foreach ( $input as $key => $value ) {
+
+		// If checkboxes are present then they're set to 'on'
+		if ( preg_match( '/checkbox/', $key) )
+			$output[$key] = 'on';
+
+		if ( in_array( $key, $text_field_inputs ) && isset( $value ) && ! empty( $value ) ) 
+			$output[$key] = $value;
+	}
+
 
 	// The sample text input must be safe text with no HTML tags
 	if ( isset( $input['sample_text_input'] ) && ! empty( $input['sample_text_input'] ) )
