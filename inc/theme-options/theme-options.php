@@ -34,9 +34,9 @@ function BCMH_theme_options_init() {
 
 	// Register our individual settings fields
 	add_settings_field(
-		'hide_site', // Unique identifier for the field for this section
+		'hidden_checkbox', // Unique identifier for the field for this section
 		__( 'Hide Site', 'BCMH' ), // Setting field label
-		'BCMH_settings_field_hide_site', // Function that renders the settings field
+		'BCMH_settings_field_hidden_checkbox', // Function that renders the settings field
 		'theme_options', // Menu slug, used to uniquely identify the page; see BCMH_theme_options_add_page()
 		'general' // Settings section. Same as the first argument in the add_settings_section() above
 	);
@@ -156,8 +156,9 @@ function BCMH_sample_radio_buttons() {
  */
 function BCMH_get_theme_options() {
 	$saved = (array) get_option( 'BCMH_theme_options' );
+
 	$defaults = array(
-		'hide_site'				=> 'on',
+		'hidden_checkbox'		=> 'off',
 		'sample_checkbox'       => 'off',
 		'sample_text_input'     => '',
 		'sample_select_options' => '',
@@ -168,6 +169,7 @@ function BCMH_get_theme_options() {
 	$defaults = apply_filters( 'BCMH_default_theme_options', $defaults );
 
 	$options = wp_parse_args( $saved, $defaults );
+
 	$options = array_intersect_key( $options, $defaults );
 
 	return $options;
@@ -176,11 +178,12 @@ function BCMH_get_theme_options() {
 /**
  * Renders the 'hide-site' checkbox setting field.
  */
-function BCMH_settings_field_hide_site() {
+function BCMH_settings_field_hidden_checkbox() {
 	$options = BCMH_get_theme_options();
+
 	?>
 	<label for="hide-site">
-		<input type="checkbox" name="BCMH_theme_options[hide_site]" id="hide-site" <?php checked( 'on', $options['hide_site'] ); ?> />
+		<input type="checkbox" name="BCMH_theme_options[hidden_checkbox]" id="hide-site" <?php checked( 'on', $options['hidden_checkbox'] ); ?> />
 		<?php _e( 'Prevent logged out users from accessing the site.', 'BCMH' ); ?>
 	</label>
 	<?php
@@ -192,6 +195,7 @@ function BCMH_settings_field_hide_site() {
  */
 function BCMH_settings_field_sample_checkbox() {
 	$options = BCMH_get_theme_options();
+
 	?>
 	<label for="sample-checkbox">
 		<input type="checkbox" name="BCMH_theme_options[sample_checkbox]" id="sample-checkbox" <?php checked( 'on', $options['sample_checkbox'] ); ?> />
@@ -205,6 +209,7 @@ function BCMH_settings_field_sample_checkbox() {
  */
 function BCMH_settings_field_sample_text_input() {
 	$options = BCMH_get_theme_options();
+
 	?>
 	<input type="text" name="BCMH_theme_options[sample_text_input]" id="sample-text-input" value="<?php echo esc_attr( $options['sample_text_input'] ); ?>" />
 	<label class="description" for="sample-text-input"><?php _e( 'Sample text input', 'BCMH' ); ?></label>
@@ -310,6 +315,9 @@ function BCMH_theme_options_validate( $input ) {
 	if ( isset( $input['sample_checkbox'] ) )
 		$output['sample_checkbox'] = 'on';
 
+	if ( isset( $input['hidden_checkbox'] ) )
+		$output['hidden_checkbox'] = 'on';
+
 	// The sample text input must be safe text with no HTML tags
 	if ( isset( $input['sample_text_input'] ) && ! empty( $input['sample_text_input'] ) )
 		$output['sample_text_input'] = wp_filter_nohtml_kses( $input['sample_text_input'] );
@@ -329,7 +337,7 @@ function BCMH_theme_options_validate( $input ) {
 	return apply_filters( 'BCMH_theme_options_validate', $output, $input );
 }
 
-add_action( 'init', 'bcmh_hide_site' );
+add_action( 'init', 'bcmh_hidden_checkbox' );
 
 /**
  * Redirect site to static site during development/downtime
@@ -338,14 +346,17 @@ add_action( 'init', 'bcmh_hide_site' );
  * 
  * @since BCMH_base 1.1
  */
-function bcmh_hide_site() {
+if ( !function_exists('bcmh_hidden_checkbox') ) {
+
+	function bcmh_hidden_checkbox() {
 	$options = BCMH_get_theme_options();
 	
 	$login = in_array($GLOBALS['pagenow'], array('wp-login.php', 'wp-register.php'));
 
-	if ( "on" == $options['hide_site'] && !is_user_logged_in() && !$login ) {
+	if ( "on" == $options['hidden_checkbox'] && !is_user_logged_in() && !$login ) {
 		require get_template_directory() . "/inc/static/site-hidden.php";
 		
 		die();
 	}
+}
 }
