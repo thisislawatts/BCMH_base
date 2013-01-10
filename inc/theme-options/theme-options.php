@@ -48,6 +48,16 @@ function BCMH_theme_options_init() {
 		'general' // Settings section. Same as the first argument in the add_settings_section() above
 	);
 
+	add_settings_field(
+		'styleguide_checkbox',
+		__( 'Link through to Styleguide', 'BCMH' ),
+		'BCMH_settings_field_checkbox',
+		'theme_options',
+		'general',
+		array(
+			'label_for' => 'styleguide_checkbox'
+	) );
+
 	// vCard Settings
 	add_settings_field( 'street_address', __( 'Street Address', 'BCMH' ), 'BCMH_settings_text_input', 'theme_options', 'vcard', array( 'label_for' => 'street_address' ) );
 	add_settings_field( 'address_locality', __( 'City/Town', 'BCMH' ), 'BCMH_settings_text_input', 'theme_options', 'vcard', array( 'label_for' => 'address_locality' ) );
@@ -116,6 +126,21 @@ function BCMH_settings_text_input( $params = array() ) {
 	$options = BCMH_get_theme_options();
 	?>
 	<input type="text" name="BCMH_theme_options[<?php echo $params['label_for'] ?>]" id="<?php echo $params['label_for'] ?>" value="<?php echo $options[$params['label_for']] ?>">
+	<?php 
+}
+
+/**
+ * Prints out our checkbox
+ * 
+ * @since BCMH_base 1.2
+ */
+function BCMH_settings_field_checkbox( $params = array() ) {
+	$options = BCMH_get_theme_options();
+	?>
+	<label for="<?php echo $params['label_for']; ?>">
+	<input type="checkbox" name="BCMH_theme_options[<?php echo $params['label_for'] ?>]" id="hide-site" <?php checked( 'on', $options[$params['label_for']] ); ?> />
+	<?php _e( $params['description'], 'BCMH' ); ?>
+	</label>
 	<?php 
 }
 
