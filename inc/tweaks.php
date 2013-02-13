@@ -78,3 +78,16 @@ function bcmh_admin_footer() {
 	echo '&copy; ' . date("Y") . ' <a href="http://bcmh.co.uk">BCMH</a>';
 }
 add_filter( 'admin_footer_text', 'bcmh_admin_footer' );
+
+
+
+/*
+ * Typekit scripts
+ *
+ * @since BCMH_base 1.2
+ */
+ function bcmh_print_typekit( $typekit_id ) { ?>
+	<script src="//use.typekit.net/<?php echo $typekit_id; ?>.js"></script>
+    <script>try{Typekit.load();}catch(e){}</script>
+	<?php 
+}
