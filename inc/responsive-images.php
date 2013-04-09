@@ -76,8 +76,6 @@ function bcmh_picture_element( $image_id ) {
 
 			uasort( $image_meta['sizes'], 'orderImagesByWidth');
 
-			var_dump($image_meta['sizes']);
-
 			$image_upload_dir = substr($image_meta['file'], 0, strrpos( $image_meta['file'], '/' ) + 1 );
 			
 			foreach ( $image_meta['sizes'] as $size => $filename ) {
